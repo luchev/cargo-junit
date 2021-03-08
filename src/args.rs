@@ -13,6 +13,12 @@ pub fn get_args<'a>() -> clap::ArgMatches<'a> {
         .default_value("")
         .help("set the junit suite name. This is also the file name");
 
+    let test_name_arg = clap::Arg::with_name("test-name")
+        .short("t")
+        .long("test-name")
+        .value_name("TEST_NAME")
+        .default_value("")
+        .help("specify the test to run");
 
     clap::App::new("test junit")
         .about("Creates junit XML from cargo-test output")
@@ -20,6 +26,7 @@ pub fn get_args<'a>() -> clap::ArgMatches<'a> {
         .subcommand(clap::SubCommand::with_name("junit")
             .about("Converts cargo test output into a junit report")
             .arg(name_arg)
+            .arg(test_name_arg)
             .arg(clap::Arg::with_name("features")
                 .long("features")
                 .value_name("FEATURES")))

@@ -20,7 +20,9 @@ pub fn get_cargo_test_output(matches: &ArgMatches) -> TestSuites {
         .map(|x| format!(" --features {}", x))
         .unwrap_or("".to_string());
 
-    let t = get_test_output(features);
+    let test_name = sub_match.value_of("test-name").unwrap_or("").to_string();
+
+    let t = get_test_output(features, test_name);
     let output = match t.0 {
         Ok(a) => a,
 	Err(e) => panic!("{}", e),
@@ -41,9 +43,8 @@ pub fn get_cargo_test_output(matches: &ArgMatches) -> TestSuites {
     ts
 }
 
-fn get_test_output(features: String) -> (std::io::Result<std::process::Output>, i64) {
-    let args = vec![format!("test{}", features)];
-
+fn get_test_output(features: String, test_name: String) -> (std::io::Result<std::process::Output>, i64) {
+    let args = vec![format!("test{}", features), test_name];
     let start = PreciseTime::now();
     let output = cmd("cargo", args)
         .env("RUSTFLAGS", "-A warnings")
